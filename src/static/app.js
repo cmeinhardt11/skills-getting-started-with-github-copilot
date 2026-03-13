@@ -170,6 +170,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     removeButton.disabled = true;
+    let shouldReenableButton = true;
 
     try {
       const response = await fetch(
@@ -185,6 +186,9 @@ document.addEventListener("DOMContentLoaded", () => {
         messageDiv.textContent = result.message;
         messageDiv.className = "success";
         await fetchActivities();
+        // The activities list has been refreshed, so the original button
+        // is no longer part of the active UI and does not need re-enabling.
+        shouldReenableButton = false;
       } else {
         messageDiv.textContent = result.detail || "An error occurred";
         messageDiv.className = "error";
@@ -198,6 +202,9 @@ document.addEventListener("DOMContentLoaded", () => {
       setTimeout(() => {
         messageDiv.classList.add("hidden");
       }, 5000);
+      if (shouldReenableButton) {
+        removeButton.disabled = false;
+      }
     }
   });
 
